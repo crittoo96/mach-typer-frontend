@@ -1,8 +1,13 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+
+import { HiraganaList } from "./lib/trans/index";
 
 function App() {
+  let hiraganaList: HiraganaList = new HiraganaList("わたし");
+
+  console.log(hiraganaList);
   return (
     <div className="App">
       <header className="App-header">
