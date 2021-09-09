@@ -26,3 +26,9 @@ nodes.map(node => node.trans = henkan(node.char));
 char: 'か',
 trans: ['ca', 'ka']
 }
+
+### 
+
+### (構造化したものを Serialize してどこかに保存できればいいのに)
+
+###
