@@ -6,21 +6,19 @@ import { HiraganaList } from "./lib/trans/HiraganaList";
 import { HiraganaNode } from "./lib/trans/HiraganaNode";
 import { Chunk } from "./lib/trans/Chunk";
 
-import { type } from "os";
-
 function App() {
   const [text, setText] = useState("");
   const [isEnd, setIsEnd] = useState(false);
   const [isWrong, setIsWrong] = useState(false);
-  const [currentNode, setCurrentNode] = useState();
   // const [typeText, setTypeText] = useState("");
 
   // setTypeText("わたしか");
   // setTypeText("わたしか");
-  const typeText = "きゃんたまきゅん";
+  const typeText = "おふろ";
   const h1Text = typeText;
   let inputFullText = "";
   let sampleInput = "";
+  let allowDuplicateN = false;
 
   // 問題文からインスタンス生成
   let _nodeList: HiraganaList = new HiraganaList(typeText);
@@ -51,6 +49,11 @@ function App() {
         return;
       }
 
+      if (allowDuplicateN && inputKey === "n") {
+        inputFullText += inputKey;
+        setText(inputFullText);
+        allowDuplicateN = false;
+      }
       // 入力をもとにchunkに存在するか確認する。存在したら、それを正式チャンクにする
       // 入力に応じて動的にチャンクが切り替わる様にすればいい
       let chunk: Chunk | undefined = checkNode.chunks.find((chk) =>
@@ -64,14 +67,17 @@ function App() {
         for (let i = 0; i < checkNode.chunks.length; i++) {
           checkNode.chunks[i].alphabetPair.shift(); //先頭文字を削除
         }
-        // chunk.alphabetPair.shift(); //先頭文字を削除
+
+        // 「ん」のときを考慮する（クソ実装）
+
+        allowDuplicateN = !!chunk.options.allowDuplicate_N;
+
         inputFullText += inputKey;
         setText(inputFullText);
 
         // 現在のNodeのチャンクが空になったとき、次の文字に進める
         if (chunk.isEmptyAlphabetPair()) {
           if (nodeList.length > 0) {
-            console.log(checkNode.c, chunk);
             if (chunk.options.skipNextNode) {
               nodeList.shift();
             }
@@ -94,8 +100,6 @@ function App() {
     document.addEventListener("keydown", escFunc, false);
     // setCurrentNode(nodeList.shift());
   }, []);
-
-  // console.log(input);
 
   return (
     <div className="App">

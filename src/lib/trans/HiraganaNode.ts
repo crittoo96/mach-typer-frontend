@@ -209,7 +209,9 @@ export class HiraganaNode {
       case "ん":
         // ここの実装かえる！！！
         if (nextS && !["な", "に", "ぬ", "ね", "の"].includes(nextS))
-          chunks.push(this.createChunkInstance(["n"]));
+          chunks.push(
+            this.createChunkInstance(["n"], { allowDuplicate_N: true })
+          );
 
         chunks.push(this.createChunkInstance(["n", "n"]));
         chunks.push(this.createChunkInstance(["x", "n"]));
