@@ -281,6 +281,14 @@ export class HiraganaNode {
         break;
       case "と":
         chunks.push(this.createChunkInstance(["t", "o"]));
+
+        if (nextS === "ぅ") {
+          chunks.push(
+            this.createChunkInstance(["t", "w", "u"], {
+              skipNextNode: true,
+            })
+          );
+        }
         break;
 
       /* な行 */
@@ -289,6 +297,38 @@ export class HiraganaNode {
         break;
       case "に":
         chunks.push(this.createChunkInstance(["n", "i"]));
+
+        if (nextS === "ゃ") {
+          chunks.push(
+            this.createChunkInstance(["n", "y", "a"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぃ") {
+          chunks.push(
+            this.createChunkInstance(["n", "y", "i"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ゅ") {
+          chunks.push(
+            this.createChunkInstance(["n", "y", "u"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぇ") {
+          chunks.push(
+            this.createChunkInstance(["n", "y", "e"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ょ") {
+          chunks.push(
+            this.createChunkInstance(["n", "y", "o"], {
+              skipNextNode: true,
+            })
+          );
+        }
         break;
       case "ぬ":
         chunks.push(this.createChunkInstance(["n", "u"]));
@@ -306,10 +346,68 @@ export class HiraganaNode {
         break;
       case "ひ":
         chunks.push(this.createChunkInstance(["h", "i"]));
+
+        if (nextS === "ゃ") {
+          chunks.push(
+            this.createChunkInstance(["h", "y", "a"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぃ") {
+          chunks.push(
+            this.createChunkInstance(["h", "y", "i"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ゅ") {
+          chunks.push(
+            this.createChunkInstance(["h", "y", "u"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぇ") {
+          chunks.push(
+            this.createChunkInstance(["h", "y", "e"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ょ") {
+          chunks.push(
+            this.createChunkInstance(["h", "y", "o"], {
+              skipNextNode: true,
+            })
+          );
+        }
         break;
       case "ふ":
         chunks.push(this.createChunkInstance(["h", "u"]));
         chunks.push(this.createChunkInstance(["f", "u"]));
+
+        if (nextS === "ぁ") {
+          chunks.push(
+            this.createChunkInstance(["f", "a"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぃ") {
+          chunks.push(
+            this.createChunkInstance(["f", "i"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぇ") {
+          chunks.push(
+            this.createChunkInstance(["f", "e"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぉ") {
+          chunks.push(
+            this.createChunkInstance(["f", "o"], {
+              skipNextNode: true,
+            })
+          );
+        }
         break;
       case "へ":
         chunks.push(this.createChunkInstance(["h", "e"]));
@@ -324,6 +422,38 @@ export class HiraganaNode {
         break;
       case "み":
         chunks.push(this.createChunkInstance(["m", "i"]));
+
+        if (nextS === "ゃ") {
+          chunks.push(
+            this.createChunkInstance(["m", "y", "a"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぃ") {
+          chunks.push(
+            this.createChunkInstance(["m", "y", "i"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ゅ") {
+          chunks.push(
+            this.createChunkInstance(["m", "y", "u"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぇ") {
+          chunks.push(
+            this.createChunkInstance(["m", "y", "e"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ょ") {
+          chunks.push(
+            this.createChunkInstance(["m", "y", "o"], {
+              skipNextNode: true,
+            })
+          );
+        }
         break;
       case "む":
         chunks.push(this.createChunkInstance(["m", "u"]));
@@ -352,6 +482,63 @@ export class HiraganaNode {
         break;
       case "り":
         chunks.push(this.createChunkInstance(["r", "i"]));
+
+        if (nextS === "ゃ") {
+          chunks.push(
+            this.createChunkInstance(["r", "y", "a"], {
+              skipNextNode: true,
+            })
+          );
+          chunks.push(
+            this.createChunkInstance(["l", "y", "a"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぃ") {
+          chunks.push(
+            this.createChunkInstance(["r", "y", "i"], {
+              skipNextNode: true,
+            })
+          );
+          chunks.push(
+            this.createChunkInstance(["l", "y", "i"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ゅ") {
+          chunks.push(
+            this.createChunkInstance(["r", "y", "u"], {
+              skipNextNode: true,
+            })
+          );
+          chunks.push(
+            this.createChunkInstance(["l", "y", "u"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぇ") {
+          chunks.push(
+            this.createChunkInstance(["r", "y", "e"], {
+              skipNextNode: true,
+            })
+          );
+          chunks.push(
+            this.createChunkInstance(["l", "y", "e"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ょ") {
+          chunks.push(
+            this.createChunkInstance(["r", "y", "o"], {
+              skipNextNode: true,
+            })
+          );
+          chunks.push(
+            this.createChunkInstance(["l", "h", "o"], {
+              skipNextNode: true,
+            })
+          );
+        }
         break;
       case "る":
         chunks.push(this.createChunkInstance(["r", "u"]));
@@ -382,6 +569,35 @@ export class HiraganaNode {
         break;
 
       /* 濁音 */
+      case "ゔ":
+        chunks.push(this.createChunkInstance(["v", "u"]));
+
+        if (nextS === "ぁ") {
+          chunks.push(
+            this.createChunkInstance(["v", "a"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぃ") {
+          chunks.push(
+            this.createChunkInstance(["v", "i"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぇ") {
+          chunks.push(
+            this.createChunkInstance(["v", "e"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぉ") {
+          chunks.push(
+            this.createChunkInstance(["v", "o"], {
+              skipNextNode: true,
+            })
+          );
+        }
+        break;
       case "が":
         chunks.push(this.createChunkInstance(["g", "a"]));
         break;
@@ -395,9 +611,21 @@ export class HiraganaNode {
               skipNextNode: true,
             })
           );
+        } else if (nextS === "ぃ") {
+          chunks.push(
+            this.createChunkInstance(["g", "y", "i"], {
+              skipNextNode: true,
+            })
+          );
         } else if (nextS === "ゅ") {
           chunks.push(
             this.createChunkInstance(["g", "y", "u"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぇ") {
+          chunks.push(
+            this.createChunkInstance(["g", "y", "e"], {
               skipNextNode: true,
             })
           );
@@ -507,6 +735,14 @@ export class HiraganaNode {
         break;
       case "ど":
         chunks.push(this.createChunkInstance(["d", "o"]));
+
+        if (nextS === "ぅ") {
+          chunks.push(
+            this.createChunkInstance(["d", "w", "u"], {
+              skipNextNode: true,
+            })
+          );
+        }
         break;
 
       case "ば":
@@ -531,6 +767,38 @@ export class HiraganaNode {
         break;
       case "ぴ":
         chunks.push(this.createChunkInstance(["p", "i"]));
+
+        if (nextS === "ゃ") {
+          chunks.push(
+            this.createChunkInstance(["p", "y", "a"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぃ") {
+          chunks.push(
+            this.createChunkInstance(["p", "y", "i"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ゅ") {
+          chunks.push(
+            this.createChunkInstance(["p", "y", "u"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ぇ") {
+          chunks.push(
+            this.createChunkInstance(["p", "y", "e"], {
+              skipNextNode: true,
+            })
+          );
+        } else if (nextS === "ょ") {
+          chunks.push(
+            this.createChunkInstance(["p", "y", "o"], {
+              skipNextNode: true,
+            })
+          );
+        }
         break;
       case "ぷ":
         chunks.push(this.createChunkInstance(["p", "u"]));
@@ -586,6 +854,20 @@ export class HiraganaNode {
         }
         chunks.push(this.createChunkInstance(["x", "u"]));
         chunks.push(this.createChunkInstance(["l", "t", "u"]));
+        break;
+
+      /* 記号(ここもしかしたらJISキー、USキーで違うかも？) */
+      case "、":
+        chunks.push(this.createChunkInstance([","]));
+        break;
+      case "。":
+        chunks.push(this.createChunkInstance(["."]));
+        break;
+      case "!":
+        chunks.push(this.createChunkInstance(["!"]));
+        break;
+      case "?":
+        chunks.push(this.createChunkInstance(["?"]));
         break;
 
       default:

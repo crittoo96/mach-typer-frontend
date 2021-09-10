@@ -14,7 +14,8 @@ function App() {
 
   // setTypeText("わたしか");
   // setTypeText("わたしか");
-  const typeText = "あったわかっしこどもがいた";
+  const typeText =
+    "ぴよろりがせんたくものをほしたのでおじぴよはあらいあらいする";
   const h1Text = typeText;
   let inputFullText = "";
   let sampleInput = "";
@@ -44,6 +45,8 @@ function App() {
     (e: KeyboardEvent) => {
       // 入力文字の取得
       let inputKey: string = e.key;
+
+      console.log(inputKey);
 
       if (checkNode === undefined) {
         return;
