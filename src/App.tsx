@@ -6,7 +6,6 @@ import { Node, HiraganaList, Chunk } from "./lib/trans/index";
 import { type } from "os";
 
 function App() {
-  console.log("aaa");
   const [text, setText] = useState("");
   const [isEnd, setIsEnd] = useState(false);
   const [isWrong, setIsWrong] = useState(false);
@@ -15,7 +14,7 @@ function App() {
 
   // setTypeText("わたしか");
   // setTypeText("わたしか");
-  const typeText = "わたしか";
+  const typeText = "きゃんたまきゅん";
   const h1Text = typeText;
   let inputFullText = "";
   let sampleInput = "";
@@ -45,6 +44,8 @@ function App() {
   // ひらがな文字の取得
   let checkNode = nodeList.shift();
 
+  console.log(checkNode);
+
   const handleWrong = () => {
     setIsWrong(true);
 
@@ -56,43 +57,36 @@ function App() {
   const escFunc = useCallback(
     (e: KeyboardEvent) => {
       // 入力文字の取得
-      console.log(e.key);
       let inputKey: string = e.key;
 
       if (checkNode === undefined) {
         return;
       }
 
-      // 最初のチャンクをとってきちゃってる
-      // let chunk: Chunk = checkNode.chunks[0];
-
-      let chunk: Chunk | undefined;
-      // if (checkNode.setectedChunk !== null) {
-      //   chunk = checkNode.setectedChunk;
-      // } else {
       // 入力をもとにchunkに存在するか確認する。存在したら、それを正式チャンクにする
       // 入力に応じて動的にチャンクが切り替わる様にすればいい
-      chunk = checkNode.chunks.find((chk) => chk.check(inputKey));
+      let chunk: Chunk | undefined = checkNode.chunks.find((chk) =>
+        chk.check(inputKey)
+      );
 
       if (chunk !== undefined) checkNode.setectedChunk = chunk;
       else return;
-      // }
-
-      // checkNode.chunks.
-      // それを正式チャンクにする
 
       if (chunk.check(inputKey)) {
         for (let i = 0; i < checkNode.chunks.length; i++) {
           checkNode.chunks[i].alphabetPair.shift(); //先頭文字を削除
         }
         // chunk.alphabetPair.shift(); //先頭文字を削除
-        console.log("iputfullText:" + inputFullText);
-        // handleInputFullText(inputKey);
         inputFullText += inputKey;
         setText(inputFullText);
 
+        // 現在のNodeのチャンクが空になったとき、次の文字に進める
         if (chunk.isEmptyAlphabetPair()) {
           if (nodeList.length > 0) {
+            console.log(checkNode.c, chunk);
+            if (chunk.skipNextNode) {
+              nodeList.shift();
+            }
             checkNode = nodeList.shift();
           } else {
             // 次の問題を出す
