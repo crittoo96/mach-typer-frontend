@@ -84,7 +84,7 @@ function App() {
         if (chunk.isEmptyAlphabetPair()) {
           if (nodeList.length > 0) {
             console.log(checkNode.c, chunk);
-            if (chunk.skipNextNode) {
+            if (chunk.options.skipNextNode) {
               nodeList.shift();
             }
             checkNode = nodeList.shift();

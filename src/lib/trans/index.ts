@@ -1,11 +1,26 @@
-// 組み合わせ、
+interface ChunkOption {
+  skipNextNode?: boolean;
+  allowDuplicate_N?: boolean;
+}
 export class Chunk {
   alphabetPair: string[]; // 例:か ['k', 'a'];
-  skipNextNode: boolean;
+  options: ChunkOption = {
+    skipNextNode: false,
+    allowDuplicate_N: false,
+  };
 
-  constructor(alphabetPair: string[], skipNextNode: boolean = false) {
+  constructor(alphabetPair: string[], options?: ChunkOption) {
     this.alphabetPair = alphabetPair;
-    this.skipNextNode = skipNextNode;
+
+    if (options !== undefined) {
+      if (options.skipNextNode !== undefined) {
+        this.options.skipNextNode = options.skipNextNode;
+      }
+
+      if (options.allowDuplicate_N !== undefined) {
+        this.options.allowDuplicate_N = options.allowDuplicate_N;
+      }
+    }
   }
 
   // ユーザーからの入力ごとに呼ばれる
@@ -45,9 +60,9 @@ export class Node {
 
   createChunkInstance(
     alphabetPair: Array<string>,
-    skipNextNode: boolean = false
+    options?: ChunkOption
   ): Chunk {
-    return new Chunk(alphabetPair, skipNextNode);
+    return new Chunk(alphabetPair, options);
   }
 
   // １文字のひらがなに対応するchunksを返却
@@ -83,11 +98,17 @@ export class Node {
 
         // きゃ
         if (nextS === "ゃ") {
-          chunks.push(this.createChunkInstance(["k", "y", "a"], true));
+          chunks.push(
+            this.createChunkInstance(["k", "y", "a"], { skipNextNode: true })
+          );
         } else if (nextS === "ゅ") {
-          chunks.push(this.createChunkInstance(["k", "y", "u"], true));
+          chunks.push(
+            this.createChunkInstance(["k", "y", "u"], { skipNextNode: true })
+          );
         } else if (nextS === "ょ") {
-          chunks.push(this.createChunkInstance(["k", "y", "o"], true));
+          chunks.push(
+            this.createChunkInstance(["k", "y", "o"], { skipNextNode: true })
+          );
         }
         break;
       case "く":
@@ -220,7 +241,11 @@ export class Node {
         break;
       case "ん":
         // ここの実装かえる！！！
+        if (nextS && !["な", "に", "ぬ", "ね", "の"].includes(nextS))
+          chunks.push(this.createChunkInstance(["n"]));
+
         chunks.push(this.createChunkInstance(["n", "n"]));
+        chunks.push(this.createChunkInstance(["x", "n"]));
         break;
 
       /*濁音*/
