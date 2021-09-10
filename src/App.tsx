@@ -14,7 +14,7 @@ function App() {
 
   // setTypeText("わたしか");
   // setTypeText("わたしか");
-  const typeText = "おふろ";
+  const typeText = "あったわかっしこどもがいた";
   const h1Text = typeText;
   let inputFullText = "";
   let sampleInput = "";
