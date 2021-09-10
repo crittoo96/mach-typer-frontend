@@ -1,45 +1,7 @@
-interface ChunkOption {
-  skipNextNode?: boolean;
-  allowDuplicate_N?: boolean;
-}
-export class Chunk {
-  alphabetPair: string[]; // 例:か ['k', 'a'];
-  options: ChunkOption = {
-    skipNextNode: false,
-    allowDuplicate_N: false,
-  };
-
-  constructor(alphabetPair: string[], options?: ChunkOption) {
-    this.alphabetPair = alphabetPair;
-
-    if (options !== undefined) {
-      if (options.skipNextNode !== undefined) {
-        this.options.skipNextNode = options.skipNextNode;
-      }
-
-      if (options.allowDuplicate_N !== undefined) {
-        this.options.allowDuplicate_N = options.allowDuplicate_N;
-      }
-    }
-  }
-
-  // ユーザーからの入力ごとに呼ばれる
-  check(alphabetChar: string): boolean {
-    if (alphabetChar === this.alphabetPair[0]) {
-      console.log("ping pong!!");
-      return true;
-    }
-    console.log("tigauyo!!");
-    return false;
-  }
-
-  isEmptyAlphabetPair(): boolean {
-    return this.alphabetPair.length === 0 ? true : false;
-  }
-}
+import { Chunk, ChunkOption } from "./Chunk";
 
 // ひらがな1文字を格納する
-export class Node {
+export class HiraganaNode {
   c: string;
   setectedChunk: Chunk | null;
   chunks: Chunk[]; //例: 「か」 Chunk1: ['k', 'a'], Chunk2: ['c', 'a'],
@@ -69,7 +31,6 @@ export class Node {
   getChunksFrom(c: string, nextS?: string): Chunk[] {
     let chunks: Chunk[] = [];
 
-    // TODO: test-code わがは
     // ここの処理50音分、頑張るくん？？なんか変換ツールないのかな
     // 「そんな」のnが２つ重なるときの判定とか、「ん」のときの判定がだるい
     switch (c) {
@@ -99,15 +60,21 @@ export class Node {
         // きゃ
         if (nextS === "ゃ") {
           chunks.push(
-            this.createChunkInstance(["k", "y", "a"], { skipNextNode: true })
+            this.createChunkInstance(["k", "y", "a"], {
+              skipNextNode: true,
+            })
           );
         } else if (nextS === "ゅ") {
           chunks.push(
-            this.createChunkInstance(["k", "y", "u"], { skipNextNode: true })
+            this.createChunkInstance(["k", "y", "u"], {
+              skipNextNode: true,
+            })
           );
         } else if (nextS === "ょ") {
           chunks.push(
-            this.createChunkInstance(["k", "y", "o"], { skipNextNode: true })
+            this.createChunkInstance(["k", "y", "o"], {
+              skipNextNode: true,
+            })
           );
         }
         break;
@@ -350,29 +317,3 @@ export class Node {
     return chunks;
   }
 }
-
-export class HiraganaList {
-  list: Node[];
-
-  constructor(str: string) {
-    this.list = this.parse(str);
-  }
-
-  // 入力文字列をNodeにパースする
-  parse(str: string): Node[] {
-    let list: Node[] = [];
-
-    for (let i = 0; i < str.length; i++) {
-      // 次の文字が存在するなら、拗音のために次の文字を預ける
-      i + 1 < str.length
-        ? list.push(new Node(str[i], str[i + 1]))
-        : list.push(new Node(str[i]));
-    }
-
-    return list;
-  }
-}
-
-// 入力文字をキューとして貯める必要はあるのか？
-// 途中入力がOKになっているから1文字単位のOKじゃなくね？
-// か」

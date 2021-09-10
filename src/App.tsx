@@ -2,7 +2,10 @@ import React, { useState, useEffect, useCallback } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
-import { Node, HiraganaList, Chunk } from "./lib/trans/index";
+import { HiraganaList } from "./lib/trans/HiraganaList";
+import { HiraganaNode } from "./lib/trans/HiraganaNode";
+import { Chunk } from "./lib/trans/Chunk";
+
 import { type } from "os";
 
 function App() {
@@ -21,30 +24,15 @@ function App() {
 
   // 問題文からインスタンス生成
   let _nodeList: HiraganaList = new HiraganaList(typeText);
-  let nodeList: Node[] = _nodeList.list;
+  let nodeList: HiraganaNode[] = _nodeList.list;
 
-  nodeList.forEach((node: Node) => {
+  nodeList.forEach((node: HiraganaNode) => {
     let chunk: Chunk = node.chunks[0];
     sampleInput += chunk.alphabetPair.join("");
   });
 
-  // let exampleInput = "";
-
-  // if
-  // let Node = nodeList.list.shift();
-
-  // const handleInputText = (
-  //   event: React.ChangeEvent<HTMLInputElement>
-  // ): void => {
-  //   setInput(event.target.value);
-
-  //   // nodeList[0].chunks[0].alphabetPair[0];
-  // };
-
   // ひらがな文字の取得
   let checkNode = nodeList.shift();
-
-  console.log(checkNode);
 
   const handleWrong = () => {
     setIsWrong(true);
