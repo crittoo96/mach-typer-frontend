@@ -25,7 +25,6 @@ export class Chunk {
   // ユーザーからの入力ごとに呼ばれる
   check(alphabetChar: string): boolean {
     if (alphabetChar === this.alphabetPair[0]) {
-      console.log("ping pong!!");
       return true;
     }
     return false;

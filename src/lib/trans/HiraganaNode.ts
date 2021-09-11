@@ -3,13 +3,33 @@ import { Chunk, ChunkOption } from "./Chunk";
 // ひらがな1文字を格納する
 export class HiraganaNode {
   c: string;
-  setectedChunk: Chunk | null;
+  done: boolean = false;
+  setectedChunk: Chunk | null = null;
   chunks: Chunk[]; //例: 「か」 Chunk1: ['k', 'a'], Chunk2: ['c', 'a'],
 
-  constructor(c: string, nextS?: string) {
+  constructor(
+    c: string,
+    nextS?: string,
+    done?: boolean,
+    selectedChunk?: Chunk | null,
+    chunks?: Chunk[]
+  ) {
     this.c = c;
-    this.setectedChunk = null;
-    this.chunks = this.getChunksFrom(c, nextS);
+    if (done !== undefined) this.done = done;
+    if (selectedChunk !== undefined) this.setectedChunk = selectedChunk;
+    chunks === undefined
+      ? (this.chunks = this.getChunksFrom(c, nextS))
+      : (this.chunks = chunks);
+  }
+
+  clone() {
+    return new HiraganaNode(
+      this.c,
+      "",
+      this.done,
+      this.setectedChunk,
+      this.chunks
+    );
   }
 
   getFrontChunk(): Chunk | null {
@@ -31,8 +51,15 @@ export class HiraganaNode {
   getChunksFrom(c: string, nextS?: string): Chunk[] {
     let chunks: Chunk[] = [];
 
-    // ここの処理50音分、頑張るくん？？なんか変換ツールないのかな
-    // 「そんな」のnが２つ重なるときの判定とか、「ん」のときの判定がだるい
+    // 英数字文字のパーサー
+    // 英語の場合はここですぐリターンする
+    const cCharCode: number = c.charCodeAt(0);
+    if (cCharCode >= 33 && cCharCode <= 126) {
+      chunks.push(this.createChunkInstance([c]));
+      return chunks;
+    }
+
+    // 日本語ひらがな文字のparser
     switch (c) {
       /* あ行 */
       case "あ":
@@ -43,6 +70,14 @@ export class HiraganaNode {
         break;
       case "う":
         chunks.push(this.createChunkInstance(["u"]));
+
+        if (nextS === "ぇ") {
+          chunks.push(
+            this.createChunkInstance(["w", "e"], {
+              skipNextNode: true,
+            })
+          );
+        }
         break;
       case "え":
         chunks.push(this.createChunkInstance(["o"]));
@@ -856,21 +891,20 @@ export class HiraganaNode {
         chunks.push(this.createChunkInstance(["l", "t", "u"]));
         break;
 
-      /* 記号(ここもしかしたらJISキー、USキーで違うかも？) */
+      /* charCodeAt範囲外の記号(ここもしかしたらJISキー、USキーで違うかも？) */
       case "、":
         chunks.push(this.createChunkInstance([","]));
         break;
       case "。":
         chunks.push(this.createChunkInstance(["."]));
         break;
-      case "!":
-        chunks.push(this.createChunkInstance(["!"]));
-        break;
-      case "?":
-        chunks.push(this.createChunkInstance(["?"]));
+      case "ー":
+        chunks.push(this.createChunkInstance(["-"]));
         break;
 
       default:
+        console.log(c);
+        console.log("taiousnai");
         break;
     }
 

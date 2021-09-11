@@ -10,28 +10,16 @@ function App() {
   const [text, setText] = useState("");
   const [isEnd, setIsEnd] = useState(false);
   const [isWrong, setIsWrong] = useState(false);
-  // const [typeText, setTypeText] = useState("");
+  const [typeText, setTypeText] = useState("うんこ");
+  const [nodeListManager, setNodeListManager] = useState<HiraganaList>(
+    new HiraganaList(typeText)
+  );
+  const [sampleInput, setSampleInput] = useState("");
 
-  // setTypeText("わたしか");
-  // setTypeText("わたしか");
-  const typeText =
-    "ぴよろりがせんたくものをほしたのでおじぴよはあらいあらいする";
-  const h1Text = typeText;
-  let inputFullText = "";
-  let sampleInput = "";
+  let currentNode: HiraganaNode | undefined;
   let allowDuplicateN = false;
 
-  // 問題文からインスタンス生成
-  let _nodeList: HiraganaList = new HiraganaList(typeText);
-  let nodeList: HiraganaNode[] = _nodeList.list;
-
-  nodeList.forEach((node: HiraganaNode) => {
-    let chunk: Chunk = node.chunks[0];
-    sampleInput += chunk.alphabetPair.join("");
-  });
-
-  // ひらがな文字の取得
-  let checkNode = nodeList.shift();
+  console.log(nodeListManager);
 
   const handleWrong = () => {
     setIsWrong(true);
@@ -41,79 +29,103 @@ function App() {
     }, 330);
   };
 
-  const escFunc = useCallback(
-    (e: KeyboardEvent) => {
-      // 入力文字の取得
-      let inputKey: string = e.key;
+  // 長い文字を分割する（クソコード）->保存段階で分割しとくのがよろし！
+  const splitByChunk = (str: string, size: number): Array<string> => {
+    const numChunks = Math.ceil(str.length / size);
+    const chunks = new Array(numChunks);
+    for (let i = 0, x = 0; i < numChunks; ++i, x += size) {
+      chunks[i] = str.substr(x, size);
+    }
+    return chunks;
+  };
 
-      console.log(inputKey);
+  const escFunc = useCallback((e: KeyboardEvent) => {
+    // 入力文字の取得
+    let inputKey: string = e.key;
 
-      if (checkNode === undefined) {
-        return;
+    if (currentNode === undefined) {
+      console.log("currentNOde: ", currentNode);
+      return;
+    }
+
+    if (allowDuplicateN && inputKey === "n") {
+      setText((prevText) => prevText + inputKey);
+      allowDuplicateN = false;
+      return;
+    }
+    // 入力をもとにchunkに存在するか確認する。存在したら、それを正式チャンクにする
+    // 入力に応じて動的にチャンクが切り替わる様にすればいい
+    let chunk: Chunk | undefined = currentNode.chunks.find((chk) =>
+      chk.check(inputKey)
+    );
+
+    if (chunk !== undefined) {
+      currentNode.setectedChunk = chunk;
+    } else {
+      handleWrong();
+      return;
+    }
+
+    if (chunk.check(inputKey)) {
+      for (let i = 0; i < currentNode.chunks.length; i++) {
+        currentNode.chunks[i].alphabetPair.shift(); //先頭文字を削除
       }
 
-      if (allowDuplicateN && inputKey === "n") {
-        inputFullText += inputKey;
-        setText(inputFullText);
-        allowDuplicateN = false;
-      }
-      // 入力をもとにchunkに存在するか確認する。存在したら、それを正式チャンクにする
-      // 入力に応じて動的にチャンクが切り替わる様にすればいい
-      let chunk: Chunk | undefined = checkNode.chunks.find((chk) =>
-        chk.check(inputKey)
-      );
+      // 「ん」のときを考慮する（クソ実装）
+      allowDuplicateN = !!chunk.options.allowDuplicate_N;
 
-      if (chunk !== undefined) checkNode.setectedChunk = chunk;
-      else return;
+      setText((prevText) => prevText + inputKey); // キータイプ入力を更新
 
-      if (chunk.check(inputKey)) {
-        for (let i = 0; i < checkNode.chunks.length; i++) {
-          checkNode.chunks[i].alphabetPair.shift(); //先頭文字を削除
-        }
-
-        // 「ん」のときを考慮する（クソ実装）
-
-        allowDuplicateN = !!chunk.options.allowDuplicate_N;
-
-        inputFullText += inputKey;
-        setText(inputFullText);
-
-        // 現在のNodeのチャンクが空になったとき、次の文字に進める
-        if (chunk.isEmptyAlphabetPair()) {
-          if (nodeList.length > 0) {
-            if (chunk.options.skipNextNode) {
-              nodeList.shift();
-            }
-            checkNode = nodeList.shift();
-          } else {
-            // 次の問題を出す
-            // 終了判定
+      // 現在のNodeのチャンクが空になったとき、次の文字に進める
+      if (chunk.isEmptyAlphabetPair()) {
+        if (nodeListManager.nodeIndex < nodeListManager.list.length) {
+          if (chunk.options.skipNextNode) {
+            nodeListManager.getNextNode();
+          }
+          currentNode = nodeListManager.getNextNode();
+          if (currentNode === undefined) {
             console.log("Congraturation!!!");
             setIsEnd(true);
           }
         }
-      } else {
-        handleWrong();
       }
-    },
-    [nodeList, checkNode, inputFullText]
-  );
+    }
+  }, []);
 
   useEffect(() => {
     document.addEventListener("keydown", escFunc, false);
-    // setCurrentNode(nodeList.shift());
+    currentNode = nodeListManager.getNextNode();
   }, []);
+
+  const renderingSample = () => {
+    console.log("useeffect!!");
+    let sample = "";
+    nodeListManager.list.forEach((node: HiraganaNode) => {
+      if (!node.done) {
+        let chunk: Chunk = node.setectedChunk
+          ? node.setectedChunk
+          : node.chunks[0];
+        sample += chunk.alphabetPair.join("");
+      }
+    });
+    return <p>{sample}</p>;
+  };
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <h1>
-          {h1Text}
+        <p>
+          {/* {splitByChunk(typeText, 50).map((chunkStr) => {
+            return <p>{chunkStr}</p>;
+          })} */}
+          {nodeListManager.list.map((node: HiraganaNode, index: number) => (
+            <span key={index}>{node.c}</span>
+          ))}
           <br />
-          {sampleInput}
-        </h1>
-        <h2>{text}</h2>
+          {/* {renderingSample()} */}
+        </p>
+        <p>{text}</p>
         <div>
           {isEnd && <p>Congraturation!!</p>}
           {isWrong && <p>Wrong!!</p>}
