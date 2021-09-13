@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
-import logo from "./logo.svg";
-import "./App.css";
 
-import { HiraganaList } from "./lib/trans/HiraganaList";
-import { HiraganaNode } from "./lib/trans/HiraganaNode";
-import { Chunk } from "./lib/trans/Chunk";
+import { HiraganaList } from "../lib/trans/HiraganaList";
+import { HiraganaNode } from "../lib/trans/HiraganaNode";
+import { Chunk } from "../lib/trans/Chunk";
 
-function App() {
+// materialUI componets
+
+export const TypingGame = () => {
   const [text, setText] = useState("");
   const [isEnd, setIsEnd] = useState(false);
   const [isWrong, setIsWrong] = useState(false);
@@ -98,7 +98,6 @@ function App() {
   }, []);
 
   const renderingSample = () => {
-    console.log("useeffect!!");
     let sample = "";
     nodeListManager.list.forEach((node: HiraganaNode) => {
       if (!node.done) {
@@ -114,7 +113,6 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p>
           {/* {splitByChunk(typeText, 50).map((chunkStr) => {
             return <p>{chunkStr}</p>;
@@ -144,6 +142,4 @@ function App() {
       </header>
     </div>
   );
-}
-
-export default App;
+};
